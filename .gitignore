@@ -20,4 +20,5 @@ ignition/deployments/chain-31337
 /interface/dist
 /interface/.env
 
-todo.md
+/todo.md
+/temp/
