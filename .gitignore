@@ -19,3 +19,5 @@ ignition/deployments/chain-31337
 /interface/node_modules
 /interface/dist
 /interface/.env
+
+todo.md
