@@ -3,6 +3,19 @@
 A decentralized gambling application,
 built using Solidity smart contracts.  
 
+## Kybit Token(KYB)
+
+**Kybit** is a native token for **zerok** decentralized gambling application.  
+It is implemented as as ERC-20 token,
+ensuring compatibility and ease of integration
+across the Ethereum ecosystem.  
+
+### Why Kyber?
+
+**Ky** - a reference to **Kyber**, a post-quantum cryptographic algorithm,
+included as a subtle but intentional reminder:
+> We must prepare for a post-quantum future.
+
 ## What does the project use?
 
 - hardhat - contract development and testing  
