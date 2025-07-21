@@ -10,7 +10,7 @@ async function main() {
 	const HelloWorld = await ethers.getContractFactory(contractName);
 	const hello = await HelloWorld.deploy();
 
-	console.log(`${contractName} deployed to:`, hello.address);
+	console.log(`${contractName} deployed to:`, await hello.getAddress());
 }
 
 main().catch(function(error) {
