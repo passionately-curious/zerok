@@ -14,7 +14,7 @@ describe("Kybit", async function() {
 		[owner, addr1, addr2] = await ethers.getSigners();
 
 		const Kybit = await ethers.getContractFactory("Kybit");
-		kybit = await Kybit.deploy(await owner .getAddress());
+		kybit = await Kybit.deploy(await owner.getAddress());
 		decimals = await kybit.decimals();
 	});
 
@@ -68,5 +68,13 @@ describe("Kybit", async function() {
 		await expect(
 			kybitAddr1.setClaimAmount(newClaimAmount)
 		).to.be.reverted;
+	});
+
+	it("should transfer 10 tokens to addr1", async function() {
+		const addr1Address = await addr1.getAddress();
+		const tx = await kybit.transfer(addr1Address, ethers.parseUnits("10", decimals));
+		await tx.wait();
+		
+		expect(await kybit.balanceOf(addr1Address)).to.equal(ethers.parseUnits("10", decimals));
 	});
 });
