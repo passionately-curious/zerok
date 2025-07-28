@@ -13,20 +13,6 @@ async function main() {
 
 	console.log("Listening for RandomWordsRequested");
 
-//		coordinator.on("RandomWordsRequested", (keyHash, requestId, preSeed, subId, minimumRequestConfirmations, callbackGasLimit, numWords, extraArgs, sender) => {
-//	  console.log({
-//		keyHash,
-//		requestId,
-//		preSeed,
-//		subId,
-//		minimumRequestConfirmations,
-//		callbackGasLimit,
-//		numWords,
-//		extraArgs,
-//		sender
-//	  });
-//	});
-
 	coordinator.on("RandomWordsRequested", async function(keyHash, requestId, preSeed, subId, minimumRequestConfirmations, callbackGasLimit, numWords, extraArgs, sender) {
 		console.log(`Detected request: ID=${requestId}`);
 
