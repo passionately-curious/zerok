@@ -51,3 +51,9 @@ yarn hardhat run scripts/your-deploy-script --network localhost
 ```bash
 yarn hardhat node
 ```
+
+## Changes to be made
+
+- [ ] claim -> sell kybit in exchange for testeth
+- [ ] distribute kybit: Kybit contract -> other game contracts (or) mint tokens
+- [ ] stake amount to be variable with some constraints
