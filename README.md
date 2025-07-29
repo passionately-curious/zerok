@@ -55,5 +55,5 @@ yarn hardhat node
 ## Changes to be made
 
 - [ ] claim -> sell kybit in exchange for testeth
-- [ ] distribute kybit: Kybit contract -> other game contracts (or) mint tokens
-- [ ] stake amount to be variable with some constraints
+- [x] distribute kybit: Kybit contract -> other game contracts (or) mint tokens
+- [x] stake amount to be variable with some constraints
