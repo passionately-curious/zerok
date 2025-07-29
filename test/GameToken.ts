@@ -20,7 +20,7 @@ describe("Kybit", async function() {
 
 	it("should check owner's balance", async function() {
 		const balance = await kybit.balanceOf(await owner.getAddress());
-		expect(balance).to.equal(ethers.parseUnits("1000", decimals));
+		expect(balance).to.equal(ethers.parseUnits("30000", decimals));
 	});
 
 	it("should allow owner to mint tokens", async function() {
@@ -76,5 +76,21 @@ describe("Kybit", async function() {
 		await tx.wait();
 		
 		expect(await kybit.balanceOf(addr1Address)).to.equal(ethers.parseUnits("10", decimals));
+	});
+
+	it("should allow only owner to transfer tokens", async function() {
+		const addr1Address = await addr1.getAddress();
+		const kybitOwner = kybit.connect(owner);
+		const value = ethers.parseUnits("100", decimals);
+
+		const tx = await kybitOwner.distribute(addr1Address, value);
+		await tx.wait();
+		
+		expect(await kybit.balanceOf(addr1Address)).to.equal(value);
+
+		const kybitAddr1 = kybit.connect(addr1);
+		await expect(
+			kybitAddr1.distribute(addr1Address, value)
+		).to.be.reverted;
 	});
 });

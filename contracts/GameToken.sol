@@ -11,7 +11,7 @@ contract Kybit is ERC20, Ownable {
 	constructor(address initialOwner)
 		ERC20("Kybit", "KYB")
 		Ownable(initialOwner) {
-			_mint(msg.sender, 1000 * 10 ** decimals());
+			_mint(msg.sender, 30000 * 10 ** decimals());
 		}
 	
 	function mint(address to, uint256 amount) public onlyOwner {
@@ -30,5 +30,9 @@ contract Kybit is ERC20, Ownable {
 
 	function setClaimAmount(uint256 _claimAmount) public onlyOwner {
 		claimAmount = _claimAmount;
+	}
+
+	function distribute(address _to, uint256 _value) public onlyOwner {
+		transfer(_to, _value);
 	}
 }
