@@ -59,15 +59,14 @@ describe("CoinToss", async function() {
 
 		const coinTossAddr1 = coinToss.connect(addr1);
 
-		const eventPromise = new Promise(function(resolve) {
+		const game1 = new Promise(function(resolve) {
 			coinToss.on("Fulfilled", async function(win) {
 				const currBalance = await kybit.balanceOf(addr1Address);
-
 				if(win) {
 					expect(currBalance).to.be.greaterThan(prevBalance);
 				}
 				else {
-					expect(currBalance).to.equal(prevBalance);
+					expect(currBalance).to.be.lessThan(prevBalance);
 				}
 				
 				resolve();
@@ -76,11 +75,9 @@ describe("CoinToss", async function() {
 
 		stakeAmount = ethers.parseUnits("10", decimals);
 		await kybitAddr1.approve(coinTossAddress, stakeAmount);
-		console.log("approved");
-		await coinTossAddr1.stake(1);
 		const prevBalance = await kybit.balanceOf(addr1Address);
-		console.log("staked");
+		await coinTossAddr1.stake(1, stakeAmount);
 
-		await eventPromise;
+		await game1;
 	});
 });

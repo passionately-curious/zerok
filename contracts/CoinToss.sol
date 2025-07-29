@@ -23,6 +23,7 @@ contract CoinToss is RNG {
 	struct Game {
 		address player;
 		CoinSide choice;
+		uint256 stakeAmount;
 	}
 
 	event Fulfilled(bool win);
@@ -31,7 +32,6 @@ contract CoinToss is RNG {
 	Kybit public kybit;
 	uint256 public HouseEdge = 2;
 	uint256 decimals;
-	uint256 public stakeAmount;
 	
 	constructor(
 		address _KybitAddress,
@@ -41,14 +41,18 @@ contract CoinToss is RNG {
 	) RNG(_subId, _vrfCoordinator, _keyHash) {
 		kybit = Kybit(_KybitAddress);
 		decimals = kybit.decimals();
-		stakeAmount = 10 * 10 ** decimals;
 	}
 
 
-	function stake(CoinSide _choice) public returns(uint256) {
+	function stake(CoinSide _choice, uint256 stakeAmount) public returns(uint256) {
+		uint256 minStake = 1 * 10 ** (decimals - 1); // 0.1 token
+		uint256 maxStake = 100 * 10 ** decimals; // 100 token
+		require(stakeAmount >= minStake && stakeAmount <= maxStake);
+
 		Game memory game;
 		game.player = msg.sender;
 		game.choice = _choice;
+		game.stakeAmount = stakeAmount;
 
 		require(kybit.balanceOf(msg.sender) >= stakeAmount, "Not enough balance");
 		uint currentAllowance = kybit.allowance(msg.sender, address(this));
@@ -70,6 +74,7 @@ contract CoinToss is RNG {
 		// random number -> toss result
 		CoinSide result = CoinSide(randomWords[0] % 2);
 		Game memory game = requestToGame[requestId];
+		uint256 stakeAmount = game.stakeAmount;
 		uint256 reward = (2 * stakeAmount) - ((HouseEdge * stakeAmount) / 100);
 
 		// if win
