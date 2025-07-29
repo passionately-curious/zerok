@@ -14,6 +14,8 @@ describe("CoinToss", async function() {
 	let decimals;
 	let stakeAmount;
 	let coinTossAddress;
+	let kybitAddress;
+	let allowedValue;
 
 	before(async function() {
 		[owner, addr1, addr2] = await ethers.getSigners();
@@ -31,7 +33,7 @@ describe("CoinToss", async function() {
 		// deploy Game token
 		const Kybit = await ethers.getContractFactory("Kybit");
 		kybit = await Kybit.deploy(await owner.getAddress());
-		const kybitAddress = await kybit.getAddress();
+		kybitAddress = await kybit.getAddress();
 		decimals = await kybit.decimals();
 
 		// deploy consumer
@@ -46,9 +48,16 @@ describe("CoinToss", async function() {
 		// add a listener to automate fulfillRandomWords
 		listenCallback(vrfMock);
 
-		// ownership is tied to contract address not the deployer
-		// another idea is create a function to reward
-		kybit.transfer(coinTossAddress, ethers.parseUnits("500", decimals));
+		const ownerKybit = kybit.connect(owner);
+
+		allowedValue = ethers.parseUnits("10000", decimals);
+		const tx = await ownerKybit.allowSpending(coinTossAddress, allowedValue);
+		await tx.wait();
+	});
+
+	it("should check spending allowance given to CoinToss contract", async function() {
+		const allowance = await kybit.allowance(kybitAddress, coinTossAddress);
+		expect(allowance).to.equal(allowedValue);
 	});
 
 	it("should have enough balance and staking should be possible", async function() {
@@ -76,7 +85,7 @@ describe("CoinToss", async function() {
 		stakeAmount = ethers.parseUnits("10", decimals);
 		await kybitAddr1.approve(coinTossAddress, stakeAmount);
 		const prevBalance = await kybit.balanceOf(addr1Address);
-		await coinTossAddr1.stake(1, stakeAmount);
+		await coinTossAddr1.stake(0, stakeAmount);
 
 		await game1;
 	});

@@ -58,7 +58,7 @@ contract CoinToss is RNG {
 		uint currentAllowance = kybit.allowance(msg.sender, address(this));
 		require(currentAllowance >= stakeAmount, "Insuff allow");
 		// contract claims
-		require(kybit.transferFrom(msg.sender, address(this), stakeAmount), "didnt transfer");
+		require(kybit.transferFrom(msg.sender, address(kybit), stakeAmount), "didnt transfer");
 
 		// request randomness
 		uint256 requestId = request();
@@ -79,7 +79,7 @@ contract CoinToss is RNG {
 
 		// if win
 		if(game.choice == result) {
-			require(kybit.transfer(game.player, reward), "couldn't reward");
+			require(kybit.transferFrom(address(kybit), game.player, reward), "couldn't reward");
 			
 			emit Fulfilled(true);
 		}
