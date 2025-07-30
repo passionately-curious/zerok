@@ -13,7 +13,6 @@ interface IKybit {
 	function transfer(address to, uint256 value) external returns (bool);
 }
 
-// RNG has a constructor, pass its arguments
 contract CoinToss is RNG {
 	enum CoinSide {
 		Heads,
@@ -64,22 +63,19 @@ contract CoinToss is RNG {
 		uint256 requestId = request();
 		requestToGame[requestId] = game;
 
-		// emit something
 		emit Requested(requestId);
 
 		return requestId;
 	}
 
 	function fulfillRandomWords(uint requestId, uint256[] calldata randomWords) internal override {
-		// random number -> toss result
 		CoinSide result = CoinSide(randomWords[0] % 2);
 		Game memory game = requestToGame[requestId];
 		uint256 stakeAmount = game.stakeAmount;
-		uint256 reward = (2 * stakeAmount) - ((HouseEdge * stakeAmount) / 100);
+		uint256 payout = (2 * stakeAmount) - ((HouseEdge * stakeAmount) / 100);
 
-		// if win
 		if(game.choice == result) {
-			require(kybit.transferFrom(address(kybit), game.player, reward), "couldn't reward");
+			require(kybit.transferFrom(address(kybit), game.player, payout), "couldn't reward");
 			
 			emit Fulfilled(true);
 		}
