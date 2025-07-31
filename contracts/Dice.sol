@@ -24,7 +24,7 @@ contract Dice is RNG {
 		uint256 stakeAmount;
 	}
 
-	event Fulfilled(bool win);
+	event Fulfilled(bool win, address indexed player, uint256 payout);
 	mapping(uint256 => Game) public requestToGame;
 
 	constructor(
@@ -38,8 +38,8 @@ contract Dice is RNG {
 	}
 
 	function stake(uint256 _rollUnder, uint256 _stakeAmount) public returns(uint256) {
-		// rollUnder to be between 2 and 100
-		// require()
+		require(_rollUnder >= 2 && _rollUnder <= 100);
+
 		uint256 minStake = 1 * 10 ** (decimals - 1); // 0.1 token
 		uint256 maxStake = 100 * 10 ** decimals; // 100 token
 		require(_stakeAmount >= minStake && _stakeAmount <= maxStake);
@@ -70,19 +70,20 @@ contract Dice is RNG {
 		uint256 result = randomWords[0] % 100 + 1;
 		Game memory game = requestToGame[requestId];
 		uint256 stakeAmount = game.stakeAmount;
-		// calculate reward
+		// calculate payout
 		uint256 multiplier = (10000 * 100) / (game.rollUnder - 1); // 10000 for precision
 		uint256 withHouseEdge = (multiplier * (100 - HouseEdge)) / 100;
-		uint256 reward = (stakeAmount * withHouseEdge) / 10000;
+		uint256 payout = (stakeAmount * withHouseEdge) / 10000;
+
+		bool didWin = result < game.rollUnder;
 
 		if(result < game.rollUnder) {
-			require(kybit.transferFrom(address(kybit), game.player, reward), "couldn't reward");
-			
-			emit Fulfilled(true);
+			require(kybit.transferFrom(address(kybit), game.player, payout), "couldn't payout");
 		}
 		else {
-			emit Fulfilled(false);
+			payout = 0;
 		}
 
+		emit Fulfilled(didWin, game.player, payout);
 	}
 }

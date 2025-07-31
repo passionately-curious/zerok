@@ -67,9 +67,11 @@ describe("CoinToss", async function() {
 		await kybitAddr1.claim();
 
 		const coinTossAddr1 = coinToss.connect(addr1);
+		let playerAddress;
 
 		const game1 = new Promise(function(resolve) {
-			coinToss.on("Fulfilled", async function(win) {
+			coinToss.on("Fulfilled", async function(win, player) {
+				playerAddress = player;
 				const currBalance = await kybit.balanceOf(addr1Address);
 				if(win) {
 					expect(currBalance).to.be.greaterThan(prevBalance);
@@ -88,5 +90,6 @@ describe("CoinToss", async function() {
 		await coinTossAddr1.stake(0, stakeAmount);
 
 		await game1;
+		expect(playerAddress).to.be.properAddress;
 	});
 });

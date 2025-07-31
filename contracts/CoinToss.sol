@@ -25,7 +25,7 @@ contract CoinToss is RNG {
 		uint256 stakeAmount;
 	}
 
-	event Fulfilled(bool win);
+	event Fulfilled(bool win, address indexed player, uint256 payout);
 	mapping(uint256 => Game) public requestToGame;
 
 	Kybit public kybit;
@@ -74,14 +74,16 @@ contract CoinToss is RNG {
 		uint256 stakeAmount = game.stakeAmount;
 		uint256 payout = (2 * stakeAmount) - ((HouseEdge * stakeAmount) / 100);
 
-		if(game.choice == result) {
-			require(kybit.transferFrom(address(kybit), game.player, payout), "couldn't reward");
-			
-			emit Fulfilled(true);
+		bool didWin = game.choice == result;
+
+		if(didWin) {
+			require(kybit.transferFrom(address(kybit), game.player, payout), "couldn't payout");
 		}
 		else {
-			emit Fulfilled(false);
+			payout = 0;
 		}
+
+		emit Fulfilled(didWin, game.player, payout);
 	}
 
 }
