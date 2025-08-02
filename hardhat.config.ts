@@ -9,12 +9,12 @@ const config: HardhatUserConfig = {
   networks: {
     hardhat: {
       chainId: 1337,
-    }
-  },
-  sepolia: {
-    url: `https://eth-sepolia.g.alchemy.com/v2/${ALCHEMY_API_KEY}`,
-    accounts: [SEPOLIA_PRIVATE_KEY],
-    chainId: 11155111,
+    },
+    sepolia: {
+      url: `https://eth-sepolia.g.alchemy.com/v2/${ALCHEMY_API_KEY}`,
+      accounts: [SEPOLIA_PRIVATE_KEY],
+      chainId: 11155111,
+    },
   },
 };
 
