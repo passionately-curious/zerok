@@ -3,16 +3,15 @@ pragma solidity ^0.8.28;
 
 import {VRFConsumerBaseV2Plus} from "@chainlink/contracts/src/v0.8/vrf/dev/VRFConsumerBaseV2Plus.sol";
 import {VRFV2PlusClient} from "@chainlink/contracts/src/v0.8/vrf/dev/libraries/VRFV2PlusClient.sol";
+import {Ownable} from "@openzeppelin/contracts/access/Ownable.sol";
 
 abstract contract RNG is VRFConsumerBaseV2Plus {
 	uint256 s_subscriptionId;
 	address vrfCoordinator;
 	bytes32 s_keyHash;
-	uint32 callbackGasLimit = 40000;
+	uint32 public callbackGasLimit = 200000;
 	uint16 requestConfirmations = 3;
 	uint32 numWords = 1;
-
-	event requested(uint256 requestId);
 
 	constructor(uint256 _subId, address _vrfCoordinator, bytes32 _keyHash) VRFConsumerBaseV2Plus(_vrfCoordinator) {
 		s_subscriptionId = _subId;
@@ -37,7 +36,11 @@ abstract contract RNG is VRFConsumerBaseV2Plus {
 		);
 
 		return requestId;
-		// emit requested(requestId);
+	}
+
+	function setCallBackGasLimit(uint32 _newLimit) external onlyOwner {
+		require(_newLimit >= 20000 && _newLimit <= 2500000);
+		callbackGasLimit = _newLimit;
 	}
 
 }
