@@ -3,6 +3,7 @@ import "@nomicfoundation/hardhat-toolbox";
 
 const SEPOLIA_PRIVATE_KEY = vars.get("SEPOLIA_PRIVATE_KEY");
 const ALCHEMY_API_KEY = vars.get("ALCHEMY_API_KEY");
+const ETHERSCAN_API_KEY = vars.get("ETHERSCAN_API_KEY");
 
 const config: HardhatUserConfig = {
   solidity: "0.8.28",
@@ -15,6 +16,9 @@ const config: HardhatUserConfig = {
       accounts: [SEPOLIA_PRIVATE_KEY],
       chainId: 11155111,
     },
+  },
+  etherscan: {
+    apiKey: ETHERSCAN_API_KEY,
   },
 };
 
