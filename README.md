@@ -3,6 +3,9 @@
 A decentralized gambling application,
 built using Solidity smart contracts.  
 
+This project is part of my Season-of-Code(2025).
+My [reports](https://github.com/passionately-curious/SoC-2025) for SoC-2025.
+
 ## Kybit Token(KYB)
 
 **Kybit** is a native token for **zerok** decentralized gambling application.  
